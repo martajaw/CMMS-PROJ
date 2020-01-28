@@ -1,0 +1,1048 @@
+# -*- coding: utf-8 -*-
+<TextLabel@Label>:
+#	text_size:self.size
+	size_hint_x: 0.1
+	halign: 'right'
+	valign: 'middle'
+	padding_x:100
+#	width: self.minimum_width
+	text_size: self.size
+    size: self.texture_size
+
+<Naglowek@Label>:
+	text_size:self.size
+	size: self.texture_size
+	font_size:18
+	halign:'right'
+	valign:'middle'	
+	padding_x:100
+	padding_y:100
+	bold: True
+<TabTextInput@TextInput>:
+	write_tab: False
+	multiline: False
+	
+<CRUD>:
+    label_id_text: label_id_text
+    label_id_data: label_id_data
+
+    title: 'Modyfikacja danych użytkownika'
+    size_hint: None, None
+    size: 850, 550
+    auto_dismiss: False
+
+    BoxLayout:
+        orientation: "vertical"
+        GridLayout:
+            orientation: "horizontal"
+            cols: 2
+            Label:
+                id: label_id_text
+                text: "ID"
+            Label:
+                id: label_id_data
+                text: root.col_data[0]  # root.userid
+            Label:
+                text: "Login"
+            TextInput:
+                id: login
+                text: root.col_data[1]  # root.login
+            Label:
+                text: "Imię"
+            TextInput:
+                id: imie
+                text: root.col_data[2]  # root.imie
+            Label:
+                text: "Nazwisko"
+            TextInput:
+                id: nazwisko
+                text: root.col_data[3]  # root.nazwisko
+            Label:
+                text: "Hasło"
+            TextInput:
+                id: haslo
+                text: root.col_data[4]  # root.haslo
+            Label:
+                text: "Rola"
+            TextInput:
+                id: rola
+                text: root.col_data[5]  # root.rola
+        Button:
+            size_hint: 1, 0.4
+            text: "Aktualizuj"# + root.mode
+            on_release:
+                root.package_changes(login.text, imie.text,nazwisko.text,haslo.text,rola.text)
+                root.update_changes(root)
+                root.dismiss()
+        Button:
+            size_hint: 1, 0.4
+            text: "Zdezaktywuj/aktywuj użytkownika"
+
+        Button:
+            size_hint: 1, 0.4
+            text: "Cofnij"# + root.mode
+            on_release: root.dismiss()
+
+<SelectableButton>:
+    # Draw a background to indicate selection
+    canvas.before:
+        Color:
+            rgba: (.0, 0.9, .1, .3) if self.selected else (0, 0, 0, 1)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<RV>:
+    BoxLayout:
+        orientation: "vertical"
+
+        Button:
+            size_hint: 1, 0.1
+            text: "WRÓĆ"
+            on_press: app.root.current = 'Zarzadzaj uzytkownikami'
+        Button:
+            size_hint: 1, 0.1
+            text: "ODŚWIEŻ"
+            on_release:
+                root.get_users()
+
+
+
+
+        GridLayout:
+            size_hint: 1, None
+            size_hint_y: None
+            height: 25
+            cols: 6
+
+            Label:
+                text: "ID"
+            Label:
+                text: "Login"
+            Label:
+                text:"Imię"
+            Label:
+                text:"Nazwisko"
+            Label:
+                text:"Hasło"
+            Label:
+                text:"Rola"
+
+        BoxLayout:
+            RecycleView:
+
+                viewclass: 'SelectableButton'
+                data: [{'text': str(x)[:10] + '...' if len(str(x)) > 10 else str(x)} for x in root.rv_data]
+                #data: [{'text': str(x)} for x in root.rv_data]
+                data_popup: [{'text': str(x)} for x in root.rv_data]
+                SelectableRecycleGridLayout:
+                    cols: 6
+                    default_size: None, dp(26)
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
+                    multiselect: True
+                    touch_multiselect: True
+
+
+<PanelEdytujUsunUzytkownikow>:
+    viewclass: 'RV'
+
+<PanelPlikow>:
+
+
+
+
+	
+
+
+<PanelLogowania>:
+	name: "Panel logowania"
+	canvas.before:
+		Color:
+			rgba:0.8,1,0.8,1
+
+
+	GridLayout:
+		row:4
+		cols:1
+		padding:50
+		spacing:50
+		#size: root.width -200, root.height -200
+		#pos: 100, 100
+		Label:
+			text: 'PODAJ NAZWĘ UŻYTKOWNIKA I HASŁO'
+			bold: True
+			size_hint_x: 0.3
+			size_hint_y: 0.3
+			color: 1,1,1,1
+
+		TabTextInput:
+			hint_text: 'login'
+			id:login
+			size_hint_x: 0.1
+			size_hint_y: 0.2
+			#pos_hint: {'right': 1, 'top': 1}
+		#Label:
+		#	text: 'Hasło:'
+		#	pos_hint: {'bottom': 1, 'left': 1}
+		TabTextInput:
+			hint_text: 'haslo'
+			id:haslo
+			password: True
+			size_hint_x: 0.1
+			size_hint_y: 0.2
+		Button:
+			size_hint_y: 0.8
+			text: 'ZALOGUJ SIĘ'
+			background_color: 0.8,1,0.8,1
+			on_release:
+				#root.zaloguj(login.text,haslo.text)
+				app.root.current = 'Panel administracyjny'
+			
+
+<PanelGlownyAdmin>:
+	BoxLayout:
+		orientation: 'vertical'
+		spacing: 20
+		name: "Panel administracyjny"
+		Label: 
+			text:"GŁÓWNY PANEL ADMINISTRACYJNY"
+			bold:True
+			size_hint_x: 0.3
+			size_hint_y: 0.3
+			color: 1,1,1,1
+			pos_hint: {'center_x': 0.5}
+
+		Button:
+			text: "ZARZĄDZAJ UŻYTKOWNIKAMI"
+			background_color: 0.8,1,0.8,1
+			on_release: 
+				app.root.current = 'Zarzadzaj uzytkownikami'
+
+
+		Button:
+			text: "WPROWADŹ DANE"
+			background_color: 0.8,1,0.8,1
+			on_release:
+				app.root.current = 'Wprowadz dane'
+			
+		Button:
+			text: "EDYTUJ DANE"
+			background_color: 0.8,1,0.8,1
+
+		Button:
+			text: "WYSZUKAJ DANE"
+			background_color: 0.8,1,0.8,1
+
+		Button:
+			text: "RAPORTY"
+			background_color: 0.8,1,0.8,1
+
+		Button:
+			text: "WYLOGUJ"	
+			on_release:
+				app.root.current = "Panel logowania"
+<PanelZarzadzajUzytkownikami>:
+    name:"ZARZĄDZAJ UŻYTKOWNIKAMI"
+    BoxLayout:
+		orientation: 'vertical'
+		spacing: 20
+        GridLayout:
+            row:2
+            cols:1
+            spacing: 10
+		    Button:
+		    	text: "STWÓRZ UŻYTKOWNIKA"
+		    	background_color: 0.8,1,0.8,1
+		    	on_release:
+		    		app.root.current = 'Stworz uzytkownika'
+
+		    Button:
+		    	text: "EDYTUJ/USUŃ UŻYTKOWNIKA"
+		    	background_color: 0.8,1,0.8,1
+		    	on_release:
+			    	app.root.current = 'Edytuj usun uzytkownikow'
+	    GridLayout:
+	        row:1
+	        cols:2
+			size_hint_y: 0.2
+	    	Button:
+	    		text: "WRÓĆ"
+    			on_release:
+    				app.root.current = "Panel administracyjny"
+    		Button:
+    			text: "WYLOGUJ"
+    			on_release:
+    				app.root.current = 'Panel logowania'
+
+
+
+
+<PanelStworzUzytkownika>:
+	name:"STWÓRZ UŻYTKOWNIKA"
+	GridLayout:
+		row:7
+		cols:2
+
+
+		Label:
+			text: "LOGIN"
+			color: 1,1,1,1
+		TabTextInput:
+			id:Uzy_login
+				
+		Label:
+			text: "IMIĘ"
+			color: 1,1,1,1
+		TabTextInput:
+			id:Uzy_imie
+
+		Label:
+			text: "NAZWISKO"
+			color: 1,1,1,1
+		TabTextInput:
+			id:Uzy_nazwisko
+
+		Label:
+			text: "HASŁO"
+			color: 1,1,1,1
+
+		TabTextInput:
+			id:Uzy_haslo
+			password: True
+			hint_text: 'Wymagane co najmniej 12 znakow'
+
+		Label:
+			text: "ROLA"
+			color: 1,1,1,1
+		TabTextInput:
+			id:Uzy_rola
+			hint_text: 'Administrator / Serwisant'
+
+		Button:
+			text: "WRÓĆ"
+			on_release:
+				app.root.current = "Panel administracyjny"
+		Button:
+			text: "STWÓRZ UŻYTKOWNIKA"
+			on_release:
+				root.stworz_uzytkownika(Uzy_login.text,Uzy_imie.text,Uzy_nazwisko.text,Uzy_haslo.text,Uzy_rola.text)
+
+
+#:import Button kivy.uix.button.Button
+<PanelWprowadzDane>:
+	BoxLayout:
+		orientation: 'vertical'
+        spacing:10
+	#	ScrollView:
+			#size: self.size
+		
+		#GridLayout:
+		#	cols:1
+		#	row:1
+			#row_default_height: 10
+		#	height: self.minimum_height
+		#	size_hint_y: 0.1
+		#	Label:
+		#		text: "WPROWADŹ DANE"
+		#		text_size:self.size			
+		#		background_color: 0,0,0,1
+		#		font_size: 20
+		#		halign:'center'
+		#		valign:'middle'
+				#height: 50
+		#		spacing:0.2
+		ScrollView:
+			size: self.size
+			bar_margin: 1
+			GridLayout:
+				#size_hint: 1,None
+				#height: self.minimum_height
+				padding: 100
+				spacing: 0.5
+				orientation: "vertical"
+				size_hint_y: None
+				height: self.minimum_height
+				width: self.minimum_width
+				row_default_height: 40
+				row:80
+				cols:2
+				############################
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text: "KLIENT"
+			
+				Label:
+					text: ""
+				TextLabel:
+					text: "Pełna nazwa"
+					
+				TabTextInput:
+					id:Kln_PelnaNazwa
+					write_tab: False
+					multiline: False
+					
+				TextLabel:
+					text: "Krotka nazwa"
+					
+				TabTextInput:
+					id:Kln_KrotkaNazwa
+					write_tab: False
+					multiline: False
+					
+             
+				TextLabel:
+					text: "NIP"
+					
+				TabTextInput:
+					id:Kln_Nip
+
+				TextLabel:
+					text: "Adres"
+					
+				TabTextInput:
+					id:Kln_Adres
+				TextLabel:
+					text: "Region"
+					
+				TabTextInput:
+					id:Kln_Region
+					
+				TextLabel:
+					text: "Kod pocztowy"
+					
+				TabTextInput:
+					id:Kln_KodPocztowy
+					
+				TextLabel:
+					text: "Kraj"
+					
+				TabTextInput:
+					id:Kln_Kraj
+					
+				TextLabel:
+					text: "Telefon"
+					
+				TabTextInput:
+					id:Kln_Telefon
+				TextLabel:
+					text: "Fax"
+					
+				TabTextInput:
+					id:Kln_Fax
+				TextLabel:
+					text: "Mail"
+					
+				TabTextInput:
+					id:Kln_Mail
+					
+				TextLabel:
+					text: "Uwagi"
+					
+				TabTextInput:
+					id:Kln_Uwagi
+				Label:
+					text: ""
+				Label:
+					text: ""
+				
+				
+				############################
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text: "MASZYNA"
+			
+				Label:
+					text: ""
+				TextLabel:
+					text: "Model"
+					
+				TabTextInput:
+					id:Mas_Model
+					write_tab: False
+					multiline: False
+					
+				TextLabel:
+					text: "Producent"
+					
+				ComboEdit:
+					write_tab: False
+					multiline: False
+					id: Prd_MasNazwa
+					options:
+						[Button(text = str(x),\
+						size_hint_y=None,\
+						height=30)\
+						for x in root.lista_prod]
+					
+             
+				TextLabel:
+					text: "Zakres pomiarowy X"
+					
+				TabTextInput:
+					id:Mas_ZakresX
+
+				TextLabel:
+					text: "Zakres pomiarowy Y"
+					
+				TabTextInput:
+					id:Mas_ZakresY
+				TextLabel:
+					text: "Zakres pomiarowy Z"
+					
+				TabTextInput:
+					id:Mas_ZakresZ
+				TextLabel:
+					text: "Tabliczka znamionowa"
+				TabTextInput:
+					id:Mas_TabZnamionowa
+				TextLabel:
+					text: "Opis Maszyny"
+				TabTextInput:
+					id:Mas_Opis
+				TextLabel:
+					text: "Inne informacje"
+				TabTextInput:
+					id:Mas_Informacje
+				Button:
+                    text: 'Load'
+                    on_release:
+                        root.aktywne_okno('Maszyna')
+                        root.show_load()
+                Button:
+                    text: 'Pliki'
+                    on_release: root.show_picture('Maszyna')
+               # Button:
+               #     text: 'Save'
+               #     on_release: root.show_save()
+
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text: "GŁOWICA"
+
+
+				Label:
+					text: ""
+				TextLabel:
+					text: "Nazwa"
+			
+				TabTextInput:
+					id:Glo_Nazwa
+				TextLabel:
+					text: "Producent"
+					
+				ComboEdit:
+					id: Prd_GloNazwa	
+					write_tab: False
+					multiline: False
+					options:
+						[Button(text = str(x),\
+						size_hint_y=None,\
+						height=30)\
+						for x in root.lista_prod]
+				TextLabel:
+					text: "Uwagi"
+					
+				TabTextInput:
+					id: Glo_Uwagi
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:	
+					text: "PINOLA"
+					
+				Label:
+					text:""
+				
+				TextLabel:
+					text: "Opis"
+					
+				TabTextInput:
+					id: Pin_Opis
+
+				TextLabel:
+					text: "Wymiar zewnetrzny"	
+				TabTextInput:
+					id: Pin_WymiarZewnetrzny
+
+				TextLabel:
+					text: "Wymiar śrub montażu"
+					
+				TabTextInput:
+					id: Pin_WymiarsrubMontazu
+				TextLabel:
+				    text:"Adapter głowicy"
+
+				TabTextInput:
+				    id: Pin_AdapterGlowicy
+
+				TextLabel:
+					text: "Uwagi"
+					
+				TabTextInput:
+					id: Pin_Uwagi
+
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text: "UKŁAD PNEUMATYCZNY"
+			
+				Label:
+					text: ""
+				TextLabel:
+					text: "Filtry model"
+					
+				TabTextInput:
+					id: Upn_FiltryModel
+				TextLabel:
+					text: "Przeciwwaga model"
+					
+				TabTextInput:
+					id: Upn_PrzeciwwagaModel
+				TextLabel:
+					text: "Przeciwwaga rodzaj"
+					
+				TabTextInput:
+					id: Upn_PrzeciwwagaRodzaj
+				TextLabel:
+					text: "System antywibracyjny"
+					
+				TabTextInput:
+					id: Upn_SystemAntywibracyjny
+				TextLabel:
+					text: "Łożyska powietrzne rodzaj"
+					
+				TabTextInput:
+					id: Upn_LozyskaPowRodzaj
+				TextLabel:
+					text: "Łożyska powietrzne model"
+					
+				TabTextInput:
+					id: Upn_LozyskaPowModel
+				TextLabel:
+					text: "Łożyska powietrzne parametry ustawcze"
+					
+				TabTextInput:
+					id: Upn_LozyskaPowParametryUst
+				TextLabel:
+					text: "Producent"
+				ComboEdit:
+					id: Prd_UpnNazwa	
+					write_tab: False
+					multiline: False
+					options:
+						[Button(text = str(x),\
+						size_hint_y=None,\
+						height=30)\
+						for x in root.lista_prod]
+
+					
+				TextLabel:
+					text: "Uwagi"
+					
+				TabTextInput:
+					id: Upn_Uwagi
+
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text: "LINIAŁY"
+			
+				Label:
+					text: ""
+				TextLabel:
+					text: "Materiał"
+				
+				TabTextInput:
+					id: Lin_material
+				TextLabel:
+					text: "Rozdzielczość"
+					
+				TabTextInput:
+					id: Lin_rozdzielczosc
+				TextLabel:
+					text: "Rodzaj sygnału"
+					
+				TabTextInput:
+					id: Lin_rodzajsygnalu
+				TextLabel:
+					text: "Rodzaj sygnału szczegóły"
+					
+				TabTextInput:
+					id: Lin_rozdzajsygnaluszcz
+				TextLabel:
+					text: "Sposób montażu"
+					
+				TabTextInput:
+					id: Lin_sposobmontazu
+				TextLabel:
+					text: "Producent"
+				ComboEdit:
+					id: Prd_LinNazwa	
+					write_tab: False
+					multiline: False
+					options:
+						[Button(text = str(x),\
+						size_hint_y=None,\
+						height=30)\
+						for x in root.lista_prod]
+					
+				TextLabel:
+					text: "Uwagi"
+					
+				TabTextInput:
+					id: Lin_Uwagi
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text: "CZYTNIKI LINIAŁU"
+			
+				Label:
+					text: ""
+				TextLabel:
+					text: "Rodzaj sygnału"
+					
+				TabTextInput:
+					id: Cln_rodzajsygnalu
+				TextLabel:
+					text: "Sposób montażu"
+					
+				TabTextInput:
+					id: Cln_sposobmontazu
+				TextLabel:
+					text: "Uwagi"
+					
+				TabTextInput:
+					id: Cln_Uwagi
+
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text:"OPROGRAMOWANIE"
+				Label:
+					text: ""
+				TextLabel:
+					text: "Rodzaj"
+				TabTextInput:
+					id: Opr_Rodzaj
+				TextLabel:
+					text: "Wersja"
+				TabTextInput:
+					id: Opr_Wersja
+				TextLabel:
+					text: "Uwagi"
+				TabTextInput:
+					id: Opr_Uwagi
+
+
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text:"URZĄDZENIA IO"
+				Label:
+					text: ""
+				TextLabel:
+					text: "Hamulec rodzaj"
+				TabTextInput:
+					id: UIO_HamulecRodzaj
+				TextLabel:
+					text: "Hamulec napięcie"
+				TabTextInput:
+					id: UIO_HamulecNapiecie
+				TextLabel:
+					text: "Krańcówki rodzaj"
+				TabTextInput:
+					id: UIO_KrancowkiRodzaj
+				TextLabel:
+					text: "Krańcówki zasilanie"
+				TabTextInput:
+					id: UIO_KrancowkiZasilanie
+				TextLabel:
+					text: "Kontrola ciśnienia rodzaj sygnału"
+				TabTextInput:
+					id: UIO_KontrolaCisnieniaRodzajSygn
+				TextLabel:
+				    text: "Inne Urzadzenia IO"
+				TabTextInput:
+				    id: UIO_InneUrzadzenia
+				TextLabel:
+					text: "Uwagi"
+				TabTextInput:
+					id: UIO_Uwagi
+
+
+
+
+
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text:"STEROWNIKI"
+				Label:
+					text: ""
+				TextLabel:
+					text: "Model"
+				TabTextInput:
+					id: Str_Model
+				TextLabel:
+					text: "Producent"
+				ComboEdit:
+					id: Prd_StrNazwa	
+					write_tab: False
+					multiline: False
+					options:
+						[Button(text = str(x),\
+						size_hint_y=None,\
+						height=30)\
+						for x in root.lista_prod]
+				TextLabel:
+					text: "Rodzaj szaty sterowniczej"
+				TabTextInput:
+					id: Str_RodzajSzatySter
+				TextLabel:
+					text: "Rodzaj interfejsu"
+				TabTextInput:
+					id: Str_RodzajInterfejsu
+				TextLabel:
+				    text: "Rodzaj panelu operatora"
+				TabTextInput:
+				    id:Str_RodzajPaneluOperatora
+				TextLabel:
+					text: "Uwagi"
+				TabTextInput:
+					id: Str_Uwagi
+
+
+
+
+
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text:"NAPĘDY"
+				Label:
+					text: ""
+				TextLabel:
+					text: "Model silnika"
+				TabTextInput:
+					id: Nap_Model
+				TextLabel:
+					text: "Parametry"
+				TabTextInput:
+					id: Nap_Parametry
+				TextLabel:
+					text: "Rodzaj napędu"
+				TabTextInput:
+					id: Nap_RodzajNapedu
+				TextLabel:
+					text: "Uwagi"
+				TabTextInput:
+					id: Nap_Uwagi
+
+
+
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text:"KOMPENSACJA TEMPERATURY"
+				Label:
+					text: ""
+				TextLabel:
+					text: "Rodzaj czujników"
+				TabTextInput:
+					id: KTM_RodzajCzujnikow
+				TextLabel:
+					text: "Interfejs"
+				TabTextInput:
+					id: KTM_Interfejs
+				TextLabel:
+					text: "Uwagi"
+				TabTextInput:
+					id: KTM_Uwagi
+
+				Label:
+					text: ""
+				Label:
+					text: ""
+				Naglowek:
+					text:"MODYFIKACJE I DODATKOWE INFORMACJE"
+				Label:
+					text: ""
+				TextLabel:
+					text: "Dokonane zmiany"
+				TabTextInput:
+					id: INF_DokonaneZmiany
+				TextLabel:
+					text: "Ważne informacje"
+				TabTextInput:
+					id: INF_Informacje
+
+
+		GridLayout:
+			row:1
+			cols:1
+			size_hint_y:0.1
+
+			Button:
+				text: 'WPROWADŹ'
+				on_release:
+					#test root.wprowadz_dane_glowica(Glo_Nazwa.text,Prd_GloNazwa.text, Glo_Uwagi.text)
+					#test root.wprowadz_dane_pinola(Pin_Opis.text,Pin_WymiarZewnetrzny.text, Pin_WymiarsrubMontazu.text,Pin_AdapterGlowicy.text, Pin_Uwagi.text)
+					
+					#test root.wprowadz_dane_uklad_pneu(Upn_FiltryModel.text,Upn_PrzeciwwagaModel.text,Upn_PrzeciwwagaRodzaj.text, Upn_SystemAntywibracyjny.text,Upn_LozyskaPowRodzaj.text,Upn_LozyskaPowRodzaj.text, Upn_LozyskaPowParametryUst.text,Prd_UpnNazwa.text, Upn_Uwagi.text)
+					#root.wprowadz_dane_oprogramowanie(Opr_Rodzaj.text,Opr_Wersja.text,Opr_Uwagi.text,Str_RodzajPaneluOperatora.text)
+					#root.wprowadz_dane_napedy(Nap_Model.text,Nap_Parametry.text,Nap_RodzajNapedu.text,Nap_Uwagi.text)
+					
+					#root.wprowadz_dane_czytnik_linialu(Cln_rodzajsygnalu.text,Cln_sposobmontazu.text,Cln_Uwagi.text)
+					#root.wprowadz_dane_linialy(Lin_material.text,Lin_rozdzielczosc.text,Lin_rodzajsygnalu.text,Lin_rozdzajsygnaluszcz.text, Lin_sposobmontazu.text,Prd_LinNazwa.text,Lin_Uwagi.text)
+					#root.wprowadz_dane_sterowniki(Prd_StrNazwa.text,Str_Model.text,Str_RodzajSzatySter.text, Str_RodzajInterfejsu.text,Str_Uwagi.text)
+					#test root.wprowadz_dane_urzadzeniaio(UIO_HamulecRodzaj.text,UIO_HamulecNapiecie.text,UIO_KrancowkiRodzaj.text,UIO_KrancowkiZasilanie.text,UIO_KontrolaCisnieniaRodzajSygn.text,UIO_InneUrzadzenia.text,UIO_Uwagi.text)
+					#root.wprowadz_dane_klienci(Kln_PelnaNazwa.text,Kln_KrotkaNazwa.text,Kln_Nip.text,Kln_Adres.text,Kln_Region.text,Kln_KodPocztowy.text,Kln_Kraj.text,Kln_Telefon.text,Kln_Fax.text,Kln_Mail.text,Kln_Uwagi.text)
+					#root.wprowadz_dane_maszyna(Prd_MasNazwa.text,Mas_Model.text,Mas_ZakresX.text,Mas_ZakresY.text,Mas_ZakresZ.text)
+				
+
+		GridLayout:
+			row:1
+			cols:2
+			size_hint_y: 0.2
+
+					
+			Button: 
+				text: 'WRÓĆ'
+				on_release:
+					app.root.current = 'Panel administracyjny'
+
+
+        	Button:
+				text: 'WYLOGUJ'
+            		#on_press: root.manager.current = 'settings'
+
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
+
+<SaveDialog>:
+    text_input: text_input
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint_y: None
+            height: 30
+            multiline: False
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Save"
+                on_release: root.save(filechooser.path, text_input.text)
+
+
+
+<ManagerEkranow>:
+
+	id: manager_ekranow
+	panel_glowny_admina: panel_glowny_admina
+	panel_glowny_serwis: panel_glowny_serwis
+	panel_logowania: panel_logowania
+
+	PanelLogowania:
+		id: panel_logowania
+		name: 'Panel logowania'
+		manager: manager_ekranow
+
+	PanelGlownyAdmin:
+		id: panel_glowny_admina
+		name: 'Panel administracyjny'
+		manager: manager_ekranow
+
+
+	PanelGlownySerwis:
+		id: panel_glowny_serwis
+		name: 'Panel serwisowy'
+		manager: manager_ekranow
+
+	PanelStworzUzytkownika:
+		id: panel_stworz_uzytkownika
+		name: 'Stworz uzytkownika'
+		manager: manager_ekranow
+		on_leave: root.ids
+	
+	PanelWprowadzDane:
+		id: panel_wprowadz_dane
+		name: 'Wprowadz dane'
+		manager: manager_ekranow
+
+	PanelZarzadzajUzytkownikami:
+	    id: panel_zarzadzaj_uzytkownikami
+	    name: 'Zarzadzaj uzytkownikami'
+	    manager: manager_ekranow
+
+    PanelEdytujUsunUzytkownikow:
+        id: panel_edytuj_usun_uzytkownikow
+        name: 'Edytuj usun uzytkownikow'
+        manager: manager_ekranow
+
+    PanelPlikow:
+        id: panel_plikow
+        name: "Panel plikow"
+        manager: manager_ekranow
+
+
+
+
